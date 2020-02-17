@@ -1,0 +1,22 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rhys-go-webserver
+spec:
+  selector:              
+    matchLabels:                       
+      app: rhys-go-webserver
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rhys-go-webserver
+    spec:
+      containers:
+      - image: rhysemmas/go-webserver:latest
+        imagePullPolicy: Always
+        name: server
+        env:
+          - name: STATE
+            value: "ok" # ok, fail, or both

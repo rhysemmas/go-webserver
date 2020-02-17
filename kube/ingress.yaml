@@ -1,0 +1,14 @@
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rhys-go-webserver
+spec:
+  rules:
+  - host: rhys-test.example
+    http:
+      paths:
+      - backend:
+          serviceName: rhys-go-webserver
+          servicePort: 8080
+        path: /
