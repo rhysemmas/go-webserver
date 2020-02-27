@@ -10,7 +10,7 @@ func main() {
 	addr := os.Getenv("ADDR")
 	state := os.Getenv("STATE")
 
-	if state != "ok" || state != "fail" || state != "both" {
+	if state != "ok" || state != "fail" || state != "both" || state != "reset" {
 		log.Fatalf("STATE env var must be set to 'ok', 'fail', or 'both'")
 	}
 
@@ -24,14 +24,18 @@ func main() {
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 
+		if state == "reset" {
+			w.WriteHeader(http.StatusResetContent)
+		}
+
 		if state == "ok" {
-                        w.WriteHeader(http.StatusOK)
-                        w.Write([]byte("200 - Something good happened! \n"))
+			w.WriteHeader(http.StatusOK)
+			w.Write([]byte("200 - Something good happened! \n"))
 		}
 
 		if state == "fail" {
-                        w.WriteHeader(http.StatusInternalServerError)
-                        w.Write([]byte("500 - Something bad happened! \n"))
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("500 - Something bad happened! \n"))
 		}
 
 		if state == "both" {
