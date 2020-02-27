@@ -10,8 +10,8 @@ func main() {
 	addr := os.Getenv("ADDR")
 	state := os.Getenv("STATE")
 
-	if state != "ok" || state != "fail" || state != "both" || state != "reset" {
-		log.Fatalf("STATE env var must be set to 'ok', 'fail', or 'both'")
+	if state == "" {
+		log.Fatalf("STATE env var must be set to 'reset', ok', 'fail', or 'both' (for switching between 200 and 500)")
 	}
 
 	if addr == "" {
