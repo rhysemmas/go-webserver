@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  go-webserver:
+    image: rhysemmas/go-webserver:v2
+    environment:
+      - STATE=reset
+    ports:
+      - "8080:8080"
+    depends_on:
+      - envoy
+
+  envoy:
+    image: envoyproxy/envoy-alpine-debug
+    command: --config-path /etc/envoy/envoy.yaml
+    expose:
+      - "10000"
+    ports:
+      - "10000:10000"
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml:ro
