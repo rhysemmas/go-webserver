@@ -11,10 +11,8 @@ services:
       - envoy
 
   envoy:
-    image: envoyproxy/envoy-alpine-debug
+    image: envoyproxy/envoy-alpine:v1.13.0
     command: --config-path /etc/envoy/envoy.yaml
-    expose:
-      - "10000"
     ports:
       - "10000:10000"
     volumes:
