@@ -37,5 +37,5 @@ static_resources:
         - endpoint:
             address:
               socket_address:
-                address: 0.0.0.0
+                address: 192.168.69.69
                 port_value: 8080
