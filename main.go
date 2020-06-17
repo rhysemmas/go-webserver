@@ -30,7 +30,7 @@ func main() {
 
 		if state == "ok" {
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("200 - Something good happened! \n"))
+			w.Write([]byte("200 - Something good happened v2! \n"))
 		}
 
 		if state == "fail" {
