@@ -44,7 +44,7 @@ func main() {
 
 		if state == "ok" {
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("200 - Something good happened v2! \n"))
+			w.Write([]byte("200 - Something good happened! \n"))
 			respStatus.WithLabelValues("200").Inc()
 		}
 
