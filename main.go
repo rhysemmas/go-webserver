@@ -4,6 +4,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+)
+
+var (
+	respStatus = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "rhys_go_webserver_request_total",
+		Help: "The total number of processed requests by response status by code",
+	},
+		[]string{"status"},
+	)
 )
 
 func main() {
@@ -20,9 +33,10 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	responseSuccess := false
+	mux.Handle("/metrics", promhttp.Handler())
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		responseSuccess := false
 
 		if state == "reset" {
 			w.WriteHeader(http.StatusResetContent)
@@ -31,11 +45,13 @@ func main() {
 		if state == "ok" {
 			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("200 - Something good happened v2! \n"))
+			respStatus.WithLabelValues("200").Inc()
 		}
 
 		if state == "fail" {
 			w.WriteHeader(http.StatusInternalServerError)
 			w.Write([]byte("500 - Something bad happened! \n"))
+			respStatus.WithLabelValues("500").Inc()
 		}
 
 		if state == "both" {
@@ -43,10 +59,12 @@ func main() {
 			if responseSuccess == true {
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte("200 - Something good happened! \n"))
+				respStatus.WithLabelValues("200").Inc()
 			}
 			if responseSuccess == false {
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Write([]byte("500 - Something bad happened! \n"))
+				respStatus.WithLabelValues("500").Inc()
 			}
 		}
 	})
