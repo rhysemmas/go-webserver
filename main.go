@@ -44,13 +44,13 @@ func main() {
 
 		if state == "ok" {
 			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("200 - Something good happened! \n"))
+			w.Write([]byte("200 - Something good happened v2! \n"))
 			respStatus.WithLabelValues("200").Inc()
 		}
 
 		if state == "fail" {
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("500 - Something bad happened! \n"))
+			w.Write([]byte("500 - Something bad happened v2! \n"))
 			respStatus.WithLabelValues("500").Inc()
 		}
 
@@ -58,12 +58,12 @@ func main() {
 			responseSuccess = !responseSuccess
 			if responseSuccess == true {
 				w.WriteHeader(http.StatusOK)
-				w.Write([]byte("200 - Something good happened! \n"))
+				w.Write([]byte("200 - Something good happened v2! \n"))
 				respStatus.WithLabelValues("200").Inc()
 			}
 			if responseSuccess == false {
 				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("500 - Something bad happened! \n"))
+				w.Write([]byte("500 - Something bad happened v2! \n"))
 				respStatus.WithLabelValues("500").Inc()
 			}
 		}
