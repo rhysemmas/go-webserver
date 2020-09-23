@@ -14,7 +14,7 @@ spec:
         app: rhys-go-webserver
     spec:
       containers:
-      - image: rhysemmas/go-webserver:latest
+      - image: rhysemmas/go-webserver:1.0
         imagePullPolicy: Always
         name: server
         env:
