@@ -19,4 +19,4 @@ spec:
         name: server
         env:
           - name: STATE
-            value: "ok" # ok, fail, or both
+            value: "ok" # ok, fail, both, or reset
