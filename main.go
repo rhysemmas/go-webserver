@@ -28,46 +28,16 @@ func main() {
 	}
 
 	if addr == "" {
-		addr = ":8080"
+		addr = ":8181"
 	}
 
 	mux := http.NewServeMux()
 
 	mux.Handle("/metrics", promhttp.Handler())
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		responseSuccess := false
-
-		if state == "reset" {
-			w.WriteHeader(http.StatusResetContent)
-		}
-
-		if state == "ok" {
-			w.WriteHeader(http.StatusOK)
-			w.Write([]byte("200 - Something good happened! \n"))
-			respStatus.WithLabelValues("200").Inc()
-		}
-
-		if state == "fail" {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("500 - Something bad happened! \n"))
-			respStatus.WithLabelValues("500").Inc()
-		}
-
-		if state == "both" {
-			responseSuccess = !responseSuccess
-			if responseSuccess == true {
-				w.WriteHeader(http.StatusOK)
-				w.Write([]byte("200 - Something good happened! \n"))
-				respStatus.WithLabelValues("200").Inc()
-			}
-			if responseSuccess == false {
-				w.WriteHeader(http.StatusInternalServerError)
-				w.Write([]byte("500 - Something bad happened! \n"))
-				respStatus.WithLabelValues("500").Inc()
-			}
-		}
-	})
+	mux.HandleFunc("/", stateHandler(state))
+	mux.HandleFunc("/ok", okHandler)
+	mux.HandleFunc("/fail", failHandler)
 
 	server := &http.Server{
 		Addr:    addr,
@@ -76,4 +46,40 @@ func main() {
 
 	log.Printf("Starting server on %s", addr)
 	log.Println(server.ListenAndServe())
+}
+
+func stateHandler(state string) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		responseSuccess := false
+
+		switch state {
+		case "reset":
+			w.WriteHeader(http.StatusResetContent)
+		case "ok":
+			okHandler(w, r)
+		case "fail":
+			failHandler(w, r)
+		case "both":
+			responseSuccess = !responseSuccess
+			if responseSuccess == true {
+				okHandler(w, r)
+			}
+			if responseSuccess == false {
+				failHandler(w, r)
+			}
+		}
+	}
+}
+
+func okHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("200 - Something good happened! \n"))
+	respStatus.WithLabelValues("200").Inc()
+}
+
+func failHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Write([]byte("500 - Something bad happened! \n"))
+	respStatus.WithLabelValues("500").Inc()
+
 }
