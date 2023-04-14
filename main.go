@@ -29,7 +29,7 @@ func setup() (string, string, error) {
 	}
 
 	if addr == "" {
-		addr = ":8181"
+		addr = ":8080"
 	}
 
 	return addr, state, nil
