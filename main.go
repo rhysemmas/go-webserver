@@ -1,47 +1,35 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
 
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-
-	"github.com/rhysemmas/go-webserver/pkg/statehttp"
+	"github.com/rhysemmas/go-webserver/pkg/apkovlhttp"
 )
 
 func main() {
-	addr, state, err := setup()
+	addr, err := setup()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	serve(addr, state)
+	serve(addr)
 }
 
-func setup() (string, string, error) {
-	state := os.Getenv("STATE")
+func setup() (string, error) {
 	addr := os.Getenv("ADDR")
-
-	if state == "" {
-		return "", "", fmt.Errorf("STATE env var must be set to 'reset', ok', 'fail', or 'both' (for switching between 200 and 500)")
-	}
 
 	if addr == "" {
 		addr = ":8080"
 	}
 
-	return addr, state, nil
+	return addr, nil
 }
 
-func serve(addr, state string) {
+func serve(addr string) {
 	mux := http.NewServeMux()
-
-	stateHandler := statehttp.NewHandler(state)
-
-	mux.Handle("/", stateHandler)
-	mux.Handle("/metrics", promhttp.Handler())
+	mux.Handle("/", apkovlhttp.NewHandler(nil))
 
 	server := &http.Server{
 		Addr:    addr,
