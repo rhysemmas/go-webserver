@@ -1,7 +1,6 @@
 package apkovlhttp
 
 import (
-	"io"
 	"os"
 	"log"
 	"net/http"
