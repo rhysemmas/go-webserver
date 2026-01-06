@@ -1,3 +1,3 @@
 module github.com/rhysemmas/go-webserver
 
-go 1.25
+go 1.24.4
