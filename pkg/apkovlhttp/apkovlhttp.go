@@ -11,11 +11,10 @@ type apkovlHandler struct {
 	ipToApkovl map[string]string
 }
 
-func NewHandler(hostmap map[string]string) *apkovlHandler {
-	testMap := make(map[string]string)
-	testMap["192.168.1.1"] = "/srv/http/test/test.apkovl.tar.gz"
-	return &apkovlHandler{ipToApkovl: testMap}
-	//return &apkovlHandler{ipToApkovl: hostmap}
+func NewHandler(ipToApkovl map[string]string) *apkovlHandler {
+	//testMap := make(map[string]string)
+	//testMap["192.168.1.1"] = "/srv/http/test/test.apkovl.tar.gz"
+	return &apkovlHandler{ipToApkovl: ipToApkovl}
 }
 
 func (a *apkovlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
