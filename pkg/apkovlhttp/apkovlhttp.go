@@ -47,6 +47,7 @@ func (a *apkovlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("read %v bytes from file: %v", i, filePath)
 	w.WriteHeader(200)
+	b = b[:i]
 	i, err = w.Write(b)
 	if err != nil {
 		log.Printf("error writing response: %v", err)
